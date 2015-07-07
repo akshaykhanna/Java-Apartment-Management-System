@@ -19,12 +19,12 @@ import javax.swing.JOptionPane;
  */
 public class FAdmin extends FrameD implements ActionListener
 {
-    JButton add,edit,serv,stat;
+    JButton add,edit,serv,stat,list;
      JLabel jl,jls;
     FAdmin()
     {
         setTitle("Admin Panel");
-        setLayout(new GridLayout(4,1));
+        setLayout(new GridLayout(5,1));
         add=new JButton("Add");
         /*
         add.addActionListener(new ActionListener(){
@@ -49,14 +49,17 @@ public class FAdmin extends FrameD implements ActionListener
         serv=new JButton("Services");
         
         stat=new JButton("Stats");
+        list=new JButton("List");
         stat.addActionListener(this);
         add.addActionListener(this);
         edit.addActionListener(this);
         serv.addActionListener(this);
+        list.addActionListener(this);
         add(add);
         add(edit);
         add(serv);
         add(stat);
+        add(list);
         setSize(400,300);
     }
      private void frameAdd() {
@@ -107,6 +110,15 @@ public class FAdmin extends FrameD implements ActionListener
            else
                JOptionPane.showMessageDialog(null,"No such flat no. !","Edit Failed :(",JOptionPane.PLAIN_MESSAGE);
            
+        }
+        if(e.getSource()==list)
+        {
+          System.out.println("list works");
+          FrameList obj=new FrameList();
+            /*jls=new JLabel();
+            DB obj=new DB();
+            jls.setText(obj.stats());
+            add(jls);*/
         }
         
     }

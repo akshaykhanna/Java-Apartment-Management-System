@@ -19,51 +19,37 @@ import javax.swing.JTextField;
  *
  * @author Akshay
  */
-public class FrameCheck extends FrameD implements ActionListener
+public class FrameList extends FrameD 
 {
     JTextField jtf;
     JButton bCheck;
      JLabel jl;
      
      
-    FrameCheck()
+    FrameList()
     {
      
       
-        setTitle("Check your maintanance");
+        setTitle("Amount to paid by ");
         setLayout(new FlowLayout());
-        jtf=new JTextField("37C");
-        JPanel jp=new JPanel();
-        jp.add(jtf);
-        add(jp);
-        bCheck=new  JButton("Check");
-        bCheck.addActionListener(this);
+       
+     
         jl=new JLabel("Enter flat no");
-        add(bCheck);
-        add(jl);
-        
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      
-        if(e.getSource()==bCheck) 
-        {
-            String flat=jtf.getText().toString();
+        /*
+        //String flat=jtf.getText().toString();
             System.out.println("It works"+flat);
            // String q="SELECT flatno,name FROM info WHERE flatno='"+flat+"'";
             //DB o=new DB();
            //String r=o.selectq(q);
-            DB o=new DB();
-           String text= o.calcBill(flat);
-           if(text!="error")
-           {
+         * */
+            DB obj=new DB();
+           String text= obj.genrateList();
+          
                jl.setText(text);
-           }
-           else
-            jl.setText("Enter valid house no.");
-            
-           
-        }
+          
+           add(jl);
+        
     }
+
+    
 }

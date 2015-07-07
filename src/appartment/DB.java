@@ -25,7 +25,7 @@ public class DB
         }
         catch(Exception e)
         {
-            System.out.println("Error:dbmanger-const: "+ e.toString());
+            System.out.println("Error:db connection: "+ e.toString());
         }
  }    
     
@@ -157,6 +157,7 @@ public class DB
 
     String calcBill(String flat) 
     {
+       int count=0;
         String text="error";
         try
         {
@@ -164,9 +165,17 @@ public class DB
         ResultSet o1=selectq("SELECT * FROM info WHERE flatno='"+flat+"'");
         while(o1.next())
       {
-          text+="Name: "+o1.getString("name")+"<br/>"+"Flat No.: "+o1.getString("flatno")+"<br/>"+"Contact No: "+o1.getString("phone");
+            count++;
+            text+="Name: "+o1.getString("name")+"<br/>"+"Flat No.: "+o1.getString("flatno")+"<br/>"+"Contact No: "+o1.getString("phone");
       }
-      
+      if(count==0)
+      {
+          text="Enter flat no";
+          JOptionPane.showMessageDialog(null,"Flat is either vacant or not registed for maintanace!","Flat Not Found :(",JOptionPane.PLAIN_MESSAGE);
+      }
+      else
+      {
+
         //="Name: "+o1.getString("name")+"<br/>"+"Flat No.: "+o1.getString("flatno")+"<br/>"+"Contact No: "+o1.getNString("phone");
          o1=selectq("SELECT services.serv,price FROM info,services,servcost WHERE info.flatno=services.flatno AND services.serv=servcost.serv AND info.flatno='"+flat+"'");
           text+="<br/> <br/> Bill:- <hr/>";
@@ -178,6 +187,7 @@ public class DB
       }
          text+="<hr/> Total: Rs: "+cost+"/- <br/> <br/> For any queries, please contact admin";
          text+="</html>";
+      }
         }
         catch(Exception e)
         {
@@ -186,7 +196,7 @@ public class DB
         }
         return text;
     }
-    String fullservConv(String ch)
+     String fullservConv(String ch)
     {
         String temp="Other";
         for(int i=0;i<=serv.length;i++)
@@ -199,6 +209,62 @@ public class DB
         }
         return temp;
     }
+      String genrateList()
+    {
+
+        String text="error";
+        String flatno="";
+        try
+        {
+             text="<html>";
+             text+="<table border='1' text-align='center' style='width:100%'> <tr> <th>Flat No.</th><th>Amount to paid (Rs)</th> </tr>";
+
+        ResultSet o1=selectq("SELECT flatno FROM info");
+        
+        while(o1.next())
+      {
+            flatno=o1.getString("flatno");
+
+       //="Name: "+o1.getString("name")+"<br/>"+"Flat No.: "+o1.getString("flatno")+"<br/>"+"Contact No: "+o1.getNString("phone");
+        double cost=0;
+               try
+       {
+           // statements allow to issue SQL queries to the database
+      Statement statement = con.createStatement();
+      // resultSet gets the result of the SQL query
+      String q="SELECT services.serv,price FROM info,services,servcost WHERE info.flatno=services.flatno AND services.serv=servcost.serv AND info.flatno='"+flatno+"'";
+
+      ResultSet o2 = statement.executeQuery(q);
+      //System.out.println("Name: "+o1.getString("name")+"<br/>"+"Flat No.: "+o1.getString("flatno")+"<br/>"+"Contact No: "+o1.getNString("phone"));
+
+         while(o2.next())
+         {
+        // text+=fullservConv(o1.getString("serv"))+"  Rs:"+o1.getString("price")+"/-<br/>" ;
+         cost+=Double.parseDouble(o2.getString("price"));
+         }
+
+     }
+     catch(Exception e)
+        {
+            System.out.println("Error:dbmanger-selectq: "+ e.toString());
+            cost=0;
+        }
+            
+         
+         
+         text+="<tr><td>"+flatno+"</td><td>"+cost+"</td></tr>";
+
+        }
+        text+="</table></html>";
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error:dbmanger-calcBill: "+ e.toString());
+            text="error";
+        }
+        return text;
+    }
+   
 
     boolean login(String user, String pass) 
     {
